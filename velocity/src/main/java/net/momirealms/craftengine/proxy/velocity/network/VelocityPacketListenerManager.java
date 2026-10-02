@@ -95,6 +95,13 @@ public final class VelocityPacketListenerManager extends PacketListenerManager {
         }
         VelocityPlayer velocityPlayer = VelocityPlayer.wrap(player, connection);
         connection.bind(velocityPlayer);
+        // LimboAPI restores the compressor without firing COMPRESSION_ENABLED.
+        // Complete the relocation on the channel thread before initial server traffic.
+        connection.channel().eventLoop().execute(() -> {
+            if (connection.channel().isActive()) {
+                PacketPipelineInjector.relocate(connection.channel().pipeline());
+            }
+        });
     }
 
     @Subscribe

@@ -15,6 +15,9 @@ dependencies {
     // Reflection
     compileOnly(files("${rootProject.rootDir}/libs/jni-internal-lookup-1.9.jar"))
     compileOnly("net.momirealms:sparrow-reflection:${rootProject.properties["sparrow_reflection_version"]}")
+    testImplementation("org.junit.jupiter:junit-jupiter:5.12.2")
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher:1.12.2")
+    testImplementation("io.netty:netty-codec:${rootProject.properties["netty_version"]}")
 }
 
 sourceSets {
@@ -28,6 +31,9 @@ sourceSets {
 }
 
 tasks {
+    test {
+        useJUnitPlatform()
+    }
     shadowJar {
         relocation.applyProxy(this)
         archiveFileName = "${rootProject.name}-velocity-plugin-${rootProject.properties["project_version"]}.jar"

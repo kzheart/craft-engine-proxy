@@ -27,6 +27,7 @@ final class PacketEncoder extends ChannelOutboundHandlerAdapter {
             return;
         }
 
+        ProtocolStateSynchronizer.synchronize(context.pipeline(), this.connection, PacketSide.SERVER);
         // packetSink 可能返回原始 buffer、替换 buffer 或空 buffer 来取消 packet
         ByteBuf result = this.packetSink.handle(this.connection, this.connection.player(), PacketSide.SERVER, buffer);
         if (!result.isReadable()) {
@@ -34,6 +35,7 @@ final class PacketEncoder extends ChannelOutboundHandlerAdapter {
                 ReferenceCountUtil.release(result);
             }
             ReferenceCountUtil.release(buffer);
+            promise.trySuccess();
             return;
         }
 

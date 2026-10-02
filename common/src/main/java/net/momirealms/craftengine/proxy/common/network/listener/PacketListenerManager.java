@@ -36,6 +36,10 @@ public abstract class PacketListenerManager {
         ResourcePackSendListener.register(this.packetRegistry);
         ResourcePackStatusListener.register(this.packetRegistry);
         ResourcePackRemoveListener.register(this.packetRegistry);
+        // Optional pack-only mode for lobby preload networks with Limbo.
+        if (Boolean.getBoolean("craftengine.proxy.resource-pack-only")) {
+            return;
+        }
         PlayerInfoUpdateListener.register(this.packetRegistry, this.plugin());
         SetTabListHeaderAndFooterListener.register(this.packetRegistry, this.plugin());
         SetPlayerTeamListener.register(this.packetRegistry, this.plugin());
